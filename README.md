@@ -1,6 +1,6 @@
 # Sistema Multiagente Autônomo com LLMs para Análise Técnica e de Sentimento no Mercado Acionário Brasileiro (B3)
 
-#### Aluno: [Nome do Aluno](https://github.com/link_do_github)
+#### Aluno: [Elias Habib](https://github.com/ehabibn-git)
 #### Orientadora: [Nome da Orientadora](https://github.com/link_do_github) <!-- ou Prof. Manoela Kohler -->
 #### Co-orientador(/a/es/as): [Nome Sobrenome](https://github.com/link_do_github) <!-- caso não aplicável, remover esta linha -->
 
@@ -8,7 +8,7 @@
 
 Trabalho apresentado ao curso [GenAI e LLM MASTER](https://ica.ele.puc-rio.br/cursos/ia-generativa-large-language-models/) como pré-requisito para conclusão de curso e obtenção de crédito na disciplina "Projetos de Sistemas Inteligentes de Apoio à Decisão".
 
-- [Link para o código](https://github.com/link_do_repositorio).
+- [Link para o código](https://github.com/ehabibn-git/aa-finance).
 - [Link para o Google Colab](https://colab.research.google.com/). <!-- Adicionar link direto do notebook -->
 - [Link para a monografia](https://link_da_monografia.com). <!-- caso aplicável -->
 
@@ -77,7 +77,7 @@ A arquitetura do sistema fundamenta-se na separação estrita entre **cálculos 
 
 #### 6.2 Clonando o Repositório
 ```bash
-git clone https://github.com/link_do_repositorio.git
+git clone https://github.com/ehabibn-git/aa-finance.git
 cd aa-finance
 ```
 
