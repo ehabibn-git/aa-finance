@@ -28,7 +28,23 @@ Este trabalho apresenta uma Prova de Conceito (PoC) de um Sistema Multiagente Au
 
 ### 2. Modelagem
 
-*(Esta seção conterá o diagrama arquitetural do sistema multiagente, o detalhamento das ferramentas desenvolvidas em Python (Tools), a engenharia de prompts dos agentes e a justificativa da escolha dos modelos de fundação).*
+### 2. Modelagem
+
+A arquitetura do sistema fundamenta-se na separação estrita entre **cálculos determinísticos** e **interpretação qualitativa por LLMs**. Modelos de linguagem não são confiáveis para executar operações aritméticas complexas diretamente no prompt. Por essa razão, a camada de modelagem é dividida em duas ferramentas centrais em Python (Tools), que servem de apoio aos agentes inteligentes:
+
+#### 2.1 Ferramenta Financeira Determinística (`src/tools/financial_tool.py`)
+- **Biblioteca Base:** `yfinance` e `pandas`.
+- **Funcionamento:** Normaliza o código do ativo com o sufixo brasileiro `.SA` (ex: `PETR4.SA`), extrai o histórico de cotações dos últimos 60 dias e executa cálculos matemáticos exatos.
+- **Métricas e Indicadores Calculados:**
+  - **Média Móvel Simples (SMA 14 períodos):** Identifica a tendência de médio prazo.
+  - **Média Móvel Exponencial (EMA 20 períodos):** Dá maior peso às cotações recentes para detectar cruzamentos de tendência.
+  - **Índice de Força Relativa (RSI 14 períodos):** Aplica a fórmula clássica de Wilder para mensurar regiões de sobrecompra ($RSI > 70$) e sobrevenda ($RSI < 30$).
+  - **Variações percentuais (1 dia e 30 dias):** Quantificam a volatilidade recente do ativo.
+
+#### 2.2 Ferramenta de Notícias de Mercado (`src/tools/news_tool.py`)
+- **Biblioteca Base:** `duckduckgo_search` com mecanismo de contingência (*fallback*) para o feed RSS do Google News Brasil.
+- **Funcionamento:** Resolve o código da ação para o nome corporativo da empresa (ex: `PETR4` $\rightarrow$ `Petrobras`) e busca as notícias mais recentes publicadas na imprensa brasileira.
+- **Objetivo:** Superar a barreira de corte temporal (*cutoff date*) das LLMs, fornecendo ao agente de sentimento fatos recentes sobre governança, balanços e riscos regulatórios.
 
 ---
 
@@ -115,6 +131,19 @@ pip install -r requirements.txt
    ```bash
    python src/main.py --ticker PETR4
    ```
+
+#### 7.3 Teste Individual das Ferramentas Determinísticas
+Você pode testar cada ferramenta isoladamente no terminal para verificar a integridade da conexão com a B3 e com os feeds de notícias:
+```bash
+# 1. Teste da Ferramenta Quantitativa (cotações históricas, médias e RSI)
+python src/tools/financial_tool.py PETR4
+
+# 2. Teste da Ferramenta de Notícias (DuckDuckGo + Fallback Google News)
+python src/tools/news_tool.py PETR4
+
+# 3. Execução dos Testes Unitários
+python -m unittest tests/test_tools.py
+```
 
 ---
 
