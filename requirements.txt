@@ -1,0 +1,26 @@
+# ==========================================
+# Dependências do Projeto AA-FINANCE (TCC PUC-Rio)
+# Sistema Multiagente de Apoio à Decisão na B3
+# ==========================================
+
+# Orquestração Multiagente
+crewai>=0.80.0
+crewai-tools>=0.14.0
+
+# LLM Providers & Integração LangChain
+langchain>=0.3.0
+langchain-google-genai>=2.0.0
+google-generativeai>=0.8.0
+
+# Coleta de Dados Financeiros e Análise Numérica Determinística
+yfinance>=0.2.40
+pandas>=2.2.0
+numpy>=1.26.0
+
+# Coleta de Notícias e Raspagem Web
+duckduckgo-search>=6.2.0
+beautifulsoup4>=4.12.0
+
+# Utilitários de Ambiente e Notebook
+python-dotenv>=1.0.1
+ipywidgets>=8.1.0

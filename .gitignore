@@ -1,0 +1,39 @@
+# Ambientes Virtuais Python
+.venv/
+venv/
+ENV/
+env/
+
+# Arquivos de Variáveis de Ambiente e Segredos (NUNCA commitar chaves)
+.env
+*.env
+!.env.example
+
+# Bytecode e Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs e Arquivos Temporários
+*.log
+scratch/
+scratch_*
+temp/
+tmp/
+
+# Cache de Distribuição e Empacotamento
+build/
+dist/
+*.egg-info/
+.eggs/
