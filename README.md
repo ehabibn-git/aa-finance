@@ -1,5 +1,7 @@
 # Sistema Multiagente Autônomo com LLMs para Análise Técnica e de Sentimento no Mercado Acionário Brasileiro (B3)
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ehabibn-git/aa-finance/blob/main/notebooks/aa_finance_tcc.ipynb)
+
 #### Aluno: [Elias Habib](https://github.com/ehabibn-git)
 #### Orientadora: [Nome da Orientadora](https://github.com/link_do_github) <!-- ou Prof. Manoela Kohler -->
 #### Co-orientador(/a/es/as): [Nome Sobrenome](https://github.com/link_do_github) <!-- caso não aplicável, remover esta linha -->
@@ -9,7 +11,7 @@
 Trabalho apresentado ao curso [GenAI e LLM MASTER](https://ica.ele.puc-rio.br/cursos/ia-generativa-large-language-models/) como pré-requisito para conclusão de curso e obtenção de crédito na disciplina "Projetos de Sistemas Inteligentes de Apoio à Decisão".
 
 - [Link para o código](https://github.com/ehabibn-git/aa-finance).
-- [Link para o Google Colab](https://colab.research.google.com/). <!-- Adicionar link direto do notebook -->
+- [Link para o Google Colab](https://colab.research.google.com/github/ehabibn-git/aa-finance/blob/main/notebooks/aa_finance_tcc.ipynb).
 - [Link para a monografia](https://link_da_monografia.com). <!-- caso aplicável -->
 
 ---
@@ -119,17 +121,11 @@ pip install -r requirements.txt
 ### 7. Como executar
 
 #### 7.1 Execução no Google Colab (Recomendada)
-1. Acesse o notebook do projeto no Google Colab através do link disponibilizado no topo deste documento.
-2. Adicione sua chave de API nos **Secrets** (ícone de chave no menu lateral do Colab) com o nome `GEMINI_API_KEY`.
-3. Execute a primeira célula para instalar as dependências necessárias:
-   ```python
-   !pip install -r requirements.txt
-   ```
-4. Defina o código do ativo da B3 que deseja analisar:
-   ```python
-   ticker = "PETR4"  # Exemplo: PETR4, VALE3, ITUB4
-   ```
-5. Execute as células sequenciais para acompanhar a análise de cada agente em tempo real e visualizar o relatório final de recomendação.
+1. Clique no botão **Open in Colab** no topo deste documento ou acesse diretamente: [aa_finance_tcc.ipynb](https://colab.research.google.com/github/ehabibn-git/aa-finance/blob/main/notebooks/aa_finance_tcc.ipynb).
+2. Adicione sua chave gratuita do Google AI Studio nos **Secrets** (ícone de chave 🔑 no menu lateral do Colab) com o nome `GEMINI_API_KEY` e habilite o acesso ao notebook.
+3. Execute a **Etapa 1** para clonar o repositório e instalar as dependências automaticamente (`requirements.txt`).
+4. Na **Etapa 3**, utilize o formulário interativo para escolher a ação da B3 desejada (ex: `PETR4`, `VALE3`, `ITUB4`) e o modelo (`gemini-1.5-flash`).
+5. Acompanhe a pré-visualização das ferramentas matemáticas determinísticas e a deliberação dos agentes inteligentes em tempo real.
 
 #### 7.2 Execução Local
 1. Configure suas variáveis de ambiente copiando o arquivo de exemplo:
