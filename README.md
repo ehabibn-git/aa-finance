@@ -24,15 +24,52 @@ Este trabalho apresenta uma Prova de Conceito (PoC) de um Sistema Multiagente Au
 
 ### 1. Introdução
 
-*(Esta seção será complementada com o embasamento do mercado de capitais brasileiro, a volatilidade dos ativos na B3 e a necessidade de sistemas de apoio à decisão orientados a IA generativa).*
+O mercado de capitais brasileiro, centralizado na B3 (Brasil, Bolsa, Balcão), é caracterizado por elevada volatilidade e forte sensibilidade a variáveis macroeconômicas internas e externas. Fatores como a oscilação da taxa básica de juros (Selic), flutuações nas cotações globais de commodities (como petróleo e minério de ferro), pressões fiscais e incertezas políticas exercem impactos abruptos e simultâneos sobre os preços dos ativos de renda variável.
+
+Nesse ecossistema dinâmico, investidores e analistas de mercado enfrentam o desafio crônico da **assimetria informacional** e da **sobrecarga cognitiva**. A tomada de decisão de alocação de capital exige o processamento contínuo de duas naturezas distintas de dados:
+1. **Dados Quantitativos Estruturados:** Séries temporais históricas de preços, volumes negociados e indicadores de análise técnica (médias móveis, volatilidade e índice de força relativa);
+2. **Dados Qualitativos Não Estruturados:** Fatos relevantes, notícias de última hora, discursos regulatórios, balanços trimestrais e matérias jornalísticas veiculadas em tempo real.
+
+Embora os Modelos de Linguagem de Grande Porte (*Large Language Models* - LLMs) tenham demonstrado capacidade notável de interpretação semântica, sua aplicação isolada ao mercado financeiro encontra limitações severas:
+- **Corte Temporal de Conhecimento (*Cutoff Date*):** Modelos estáticos desconhecem fatos recentes ocorridos no dia ou na semana de negociação;
+- **Alucinações Aritméticas:** LLMs não são calculadoras e falham com frequência ao tentar calcular médias, proporções e indicadores numéricos complexos diretamente no texto do prompt;
+- **Falta de Deliberação Crítica Estruturada:** Prompts monolíticos tendem a emitir respostas genéricas e conservadoras, falhando em resolver contradições entre sinais técnicos e macroeconômicos.
+
+Para superar esses obstáculos, este trabalho propõe o desenvolvimento de uma Prova de Conceito (PoC) de um **Sistema Multiagente Autônomo com LLMs para Apoio à Tomada de Decisão na B3**. Inspirando-se na dinâmica real de um comitê de investimentos profissional e adotando o padrão de engenharia ReAct (*Reasoning and Acting*), o sistema estabelece uma divisão rigorosa de responsabilidades (*Separation of Concerns*): cálculos matemáticos são executados deterministicamente em Python (`pandas`/`yfinance`), a leitura de notícias em tempo real é obtida via busca na web e a inferência qualitativa é orquestrada através de agentes inteligentes especializados no framework **CrewAI**, culminando em uma recomendação final explicável e auditável via **Google Colab**.
 
 ---
 
 ### 2. Modelagem
 
-### 2. Modelagem
+A arquitetura do sistema fundamenta-se na separação estrita entre **cálculos determinísticos** e **interpretação qualitativa por LLMs**. Modelos de linguagem não são confiáveis para executar operações aritméticas complexas diretamente no prompt. Por essa razão, a camada de modelagem é dividida em ferramentas centrais em Python (Tools) e agentes inteligentes orquestrados sequencialmente:
 
-A arquitetura do sistema fundamenta-se na separação estrita entre **cálculos determinísticos** e **interpretação qualitativa por LLMs**. Modelos de linguagem não são confiáveis para executar operações aritméticas complexas diretamente no prompt. Por essa razão, a camada de modelagem é dividida em duas ferramentas centrais em Python (Tools), que servem de apoio aos agentes inteligentes:
+```mermaid
+flowchart TD
+    User([Usuário no Google Colab]) -->|Informa Ticker ex: PETR4| Orchestrator[Orquestrador do Pipeline]
+
+    subgraph Tools_Python [Ferramentas Determinísticas / Tools]
+        YF_Tool["yfinance + pandas\n(Cálculo SMA, EMA e RSI 14)"]
+        News_Tool["DuckDuckGo + RSS Google News\n(Busca ao vivo em pt-BR)"]
+    end
+
+    subgraph Crew_Agentes [Comitê Multiagente CrewAI]
+        Quant_Agent["Agente Analista Técnico\n(Diagnóstico de Tendência e RSI)"]
+        News_Agent["Agente de Sentimento\n(Classificação e Riscos de Notícias)"]
+        Director_Agent["Agente Diretor de Investimentos\n(Resolução de Conflitos e Decisão: C/V/M)"]
+    end
+
+    Orchestrator --> Quant_Agent
+    Orchestrator --> News_Agent
+
+    Quant_Agent -.->|Executa cálculo matemático| YF_Tool
+    News_Agent -.->|Executa busca em tempo real| News_Tool
+
+    Quant_Agent -->|Relatório Técnico Estruturado| Director_Agent
+    News_Agent -->|Relatório de Notícias e Riscos| Director_Agent
+
+    Director_Agent -->|Deliberação Ponderada| Final_Report["Relatório Executivo Final\n(COMPRAR / VENDER / MANTER)"]
+    Final_Report --> Output([Visualização no Colab / Markdown])
+```
 
 #### 2.1 Ferramenta Financeira Determinística (`src/tools/financial_tool.py`)
 - **Biblioteca Base:** `yfinance` e `pandas`.
@@ -89,16 +126,36 @@ Abaixo, sintetizam-se os indicadores calculados e as deliberações finais emiti
 
 ### 4. Conclusões
 
-*(Esta seção discutirá as vantagens da abordagem determinística combinada a sistemas multiagentes, as limitações identificadas durante os testes e propostas para trabalhos futuros).*
+Este trabalho apresentou o desenvolvimento e a validação de uma Prova de Conceito (PoC) de um **Sistema Multiagente Autônomo com LLMs para Apoio à Tomada de Decisão na B3**, estruturado com ferramentas determinísticas em Python e orquestrado via CrewAI e Google Gemini.
+
+#### 4.1 Principais Contribuições
+1. **Eliminação de Alucinações Numéricas:** A decisão de isolar a coleta e a matemática financeira em funções determinísticas (`financial_tool.py`) comprovou-se indispensável. Modelos generativos frequentemente erram somas e proporções quando forçados a calcular métricas diretamente no prompt; a delegação ao `pandas` garantiu 100% de precisão nos cálculos de médias móveis e RSI.
+2. **Capacidade Crítica de Resolução de Conflitos:** Conforme demonstrado nos estudos de caso reais (notadamente em VALE3 e PETR4), o padrão multiagente ReAct com `Process.sequential` impediu decisões simplórias e enviesadas. O Diretor de Investimentos demonstrou capacidade de ponderar riscos institucionais e setoriais contra descontos de preços, evitando a compra prematura de ativos em queda livre (*falling knife*).
+3. **Eficiência no Processamento de Informação:** O sistema reduziu um processo manual de triagem que habitualmente consome entre 30 e 60 minutos de um analista para menos de 60 segundos por ativo, gerando um relatório executivo estruturado e acionável.
+
+#### 4.2 Limitações Reais da Abordagem
+Durante os experimentos, identificaram-se limitações intrínsecas ao desenho atual da solução:
+- **Ruído em Notícias Abertas:** O uso de mecanismos abertos de busca (`duckduckgo_search` e Google News) expõe o sistema a manchetes repetitivas, clickbaits e variações na cobertura jornalística. Em ambiente corporativo, a alimentação deveria provir de feeds proprietários estruturados (ex.: Bloomberg, Reuters ou Broadcast);
+- **Latência de Inferência:** A execução sequencial de 3 agentes e a invocação de ferramentas leva em média 45 segundos por ação. Esse tempo é plenamente satisfatório para estratégias de médio e longo prazo (*Swing Trade* e *Buy and Hold*), mas inviabiliza o uso em operações intraday de alta frequência (*Day Trade* ou *HFT*);
+- **Escopo Fundamentalista Restrito:** A PoC priorizou análise técnica e notícias de curto prazo, não contemplando ainda a leitura exaustiva de demonstrações contábeis completas (DREs, Balanços Patrimoniais e Fluxos de Caixa).
+
+#### 4.3 Propostas para Trabalhos Futuros
+Para a continuidade da pesquisa e evolução da plataforma, recomendam-se:
+1. **Agente Fundamentalista (CVM):** Criação de um quarto agente conectado à API de dados abertos da Comissão de Valores Mobiliários (CVM) para analisar múltiplos fundamentalistas históricos (P/L, P/VP, EV/EBITDA, ROIC e Dívida Líquida);
+2. **Análise Gráfica Multimodal:** Utilização de modelos multimodais de visão computacional (ex.: Gemini 1.5 Pro) para inspeção direta de imagens de gráficos de velas (*candlesticks*), identificando figuras gráficas e padrões visuais de reversão;
+3. **Framework de Backtesting:** Desenvolvimento de um simulador histórico para mensurar o alfa, o *drawdown* máximo e o Índice de Sharpe de uma carteira hipotética rebalanceada periodicamente pelas recomendações do sistema.
 
 ---
 
 ### 5. Referências
 
-1. Wu, Q., et al. (2023). *AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation*.
-2. Yao, S., et al. (2023). *ReAct: Synergizing Reasoning and Acting in Language Models*. ICLR.
-3. CrewAI Documentation. *Multi-agent orchestration platform for engineering intelligence*. Disponível em: https://docs.crewai.com.
-4. Yahoo Finance API (`yfinance`). *Open-source financial data collection tool*.
+1. CREWAI. *CrewAI: Framework for orchestrating role-playing autonomous AI agents*. 2024. Disponível em: <https://docs.crewai.com>. Acesso em: 13 out. 2026.
+2. FAMA, Eugene F. *Efficient Capital Markets: A Review of Theory and Empirical Work*. The Journal of Finance, v. 25, n. 2, p. 383-417, 1970.
+3. GOOGLE DEEPMIND. *Gemini: A Family of Highly Capable Multimodal Models*. arXiv preprint arXiv:2312.11805, 2023.
+4. MURPHY, John J. *Technical Analysis of the Financial Markets: A Comprehensive Guide to Trading Methods and Applications*. New York: New York Institute of Finance, 1999.
+5. WILDER, J. Welles. *New Concepts in Technical Trading Systems*. Greensboro: Trend Research, 1978.
+6. WU, Qingyun et al. *AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation*. arXiv preprint arXiv:2308.08155, 2023.
+7. YAO, Shunyu et al. *ReAct: Synergizing Reasoning and Acting in Language Models*. In: International Conference on Learning Representations (ICLR), 2023.
 
 ---
 
