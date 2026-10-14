@@ -46,6 +46,19 @@ A arquitetura do sistema fundamenta-se na separação estrita entre **cálculos 
 - **Funcionamento:** Resolve o código da ação para o nome corporativo da empresa (ex: `PETR4` $\rightarrow$ `Petrobras`) e busca as notícias mais recentes publicadas na imprensa brasileira.
 - **Objetivo:** Superar a barreira de corte temporal (*cutoff date*) das LLMs, fornecendo ao agente de sentimento fatos recentes sobre governança, balanços e riscos regulatórios.
 
+#### 2.3 Agentes Especialistas e Orquestração Multiagente (`src/agents/`)
+A orquestração é estruturada através do framework **CrewAI**, conectada ao modelo **Google Gemini** (`gemini-1.5-flash`), com temperatura controlada ($T=0.2$) para evitar respostas alucinatórias:
+
+1. **Analista Técnico Quantitativo (`criar_agente_tecnico`):**
+   - **Papel:** Interpretação fria e analítica dos dados matemáticos providos pela `financial_tool`.
+   - **Foco:** Diagnóstico de tendência (alta/baixa) e identificação de exaustão compradora ($RSI > 70$) ou desconto excessivo ($RSI < 30$).
+2. **Analista de Inteligência de Mercado (`criar_agente_sentimento`):**
+   - **Papel:** Leitura qualitativa e síntese de notícias obtidas pela `news_tool`.
+   - **Foco:** Classificação do sentimento (Positivo, Neutro ou Negativo) e levantamento dos 3 maiores riscos corporativos/regulatórios.
+3. **Diretor de Investimentos / Gestor de Portfólio (`criar_agente_diretor`):**
+   - **Papel:** Decisor final (*Chief Investment Officer*). Não acessa a web diretamente; analisa os relatórios dos dois analistas via passagem de contexto (`context=[tarefa_tecnica, tarefa_sentimento]`).
+   - **Foco:** Ponderação de assimetria de risco-retorno, resolução de eventuais conflitos entre dados técnicos e notícias, e deliberação formal: **COMPRAR**, **VENDER** ou **MANTER**.
+
 ---
 
 ### 3. Resultados

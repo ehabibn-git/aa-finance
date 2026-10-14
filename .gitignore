@@ -35,5 +35,5 @@ tmp/
 # Cache de Distribuição e Empacotamento
 build/
 dist/
-*.egg-info/
-.eggs/
+# Documentos Privados e Roteiros Locais
+defesa_banca.md
