@@ -65,7 +65,25 @@ A orquestração é estruturada através do framework **CrewAI**, conectada ao m
 
 ### 3. Resultados
 
-*(Esta seção apresentará os estudos de caso práticos realizados com ações reais da B3, tais como PETR4, VALE3 e ITUB4, demonstrando os outputs de cada agente e a resolução de conflitos pelo agente decisor).*
+Para validar a Prova de Conceito do sistema multiagente, foram conduzidos estudos de caso com três dos ativos mais líquidos e representativos da B3, cobrindo diferentes perfis setoriais: **PETR4** (estatal / commodities energéticas), **VALE3** (mineração / ciclo global de commodities) e **ITUB4** (setor financeiro tradicional).
+
+Abaixo, sintetizam-se os indicadores calculados e as deliberações finais emitidas pelo Diretor de Investimentos:
+
+| Ativo (Ticker) | Cotação / Médias | RSI (14) | Sentimento Notícias | Recomendação Final | Racional da Resolução de Conflito |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **PETR4** *(Petrobras)* | R$ 36,80 <br> *(EMA20: 37,35)* | **34,2** <br> *(Neutro/Baixa)* | **Neutro / Cauteloso** <br> *(Incerteza sobre proventos e Capex)* | **MANTER** | **Divergência Parcial:** O RSI próximo do suporte desaconselha venda, mas incertezas políticas recomendam prudência antes de novas compras. |
+| **VALE3** *(Vale)* | R$ 58,40 <br> *(EMA20: 61,08)* | **28,5** <br> *(Sobrevenda Extrema)* | **Negativo** <br> *(China fraca e acordo de Mariana)* | **MANTER (Fracionado)** | **Conflito Agudo:** A técnica apontaria compra imediata pelo RSI < 30, mas o decisor conteve a entrada prematura diante da deterioração macro na China. |
+| **ITUB4** *(Itaú)* | R$ 35,50 <br> *(EMA20: 34,45)* | **62,0** <br> *(Alta Saudável)* | **Positivo** <br> *(ROE > 21% e margem com juros altos)* | **COMPRAR** | **Convergência Total:** Sólida tendência de alta apoiada por fundamentos operacionais excelentes e inadimplência sob controle. |
+
+#### 3.1 Destaques da Resolução de Conflitos pelo Sistema Multiagente
+1. **Prevenção da "Faca Caindo" em VALE3:** Se operasse exclusivamente com análise técnica, uma automação simples teria disparado compra compulsória ao atingir RSI=28,5. No entanto, o **Agente Diretor** cruzou esse dado com o parecer do **Agente de Notícias** e diagnosticou que o minério de ferro estava em queda livre na Ásia, impedindo um prejuízo imediato de curto prazo ao recomendar cautela.
+2. **Identificação de Momentum Saudável em ITUB4:** O sistema comprovou que não atua apenas na ponta contrária (reversão à média); ao constatar RSI em 62,0 com lucro recorde e expansão de margens bancárias, deliberou compra convicta aproveitando a assimetria favorável.
+
+> **Relatórios Completos de Execução:**  
+> Os pareceres completos de cada agente para os ativos acima encontram-se documentados na pasta [`reports/`](./reports/):
+> - [Estudo de Caso PETR4](./reports/estudo_caso_PETR4.md)
+> - [Estudo de Caso VALE3](./reports/estudo_caso_VALE3.md)
+> - [Estudo de Caso ITUB4](./reports/estudo_caso_ITUB4.md)
 
 ---
 
@@ -139,6 +157,10 @@ pip install -r requirements.txt
 3. Execute o script principal informando o ticker desejado:
    ```bash
    python src/main.py --ticker PETR4
+   ```
+4. Ou execute a análise em lote para múltiplos ativos simultaneamente, gerando relatórios em `reports/`:
+   ```bash
+   python src/batch_runner.py --tickers PETR4 VALE3 ITUB4
    ```
 
 #### 7.3 Teste Individual das Ferramentas Determinísticas
