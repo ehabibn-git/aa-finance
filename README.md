@@ -233,8 +233,8 @@ python -m unittest tests/test_tools.py
 
 ---
 
-Matrícula: [Número de Matrícula]
+Matrícula: 252.100.035
 
 Pontifícia Universidade Católica do Rio de Janeiro
 
-Curso de Pós Graduação *Inteligência Artificial Generativa & Large Language Models*
+Curso de Pós Graduação *INTELIGÊNCIA ARTIFICIAL GENERATIVA & LARGE LANGUAGE MODELS / 2025.2*
