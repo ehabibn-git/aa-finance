@@ -11,8 +11,10 @@ A orquestração utiliza o padrão de 'Process.sequential' do CrewAI:
    qualquer divergência antes de emitir a recomendação final.
 """
 
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import os
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Tuple
 from crewai import Task, Crew, Process, LLM
 from src.agents.finance_agents import criar_comite_investimento
 
@@ -95,8 +97,56 @@ def criar_tarefas(agente_tecnico, agente_sentimento, agente_diretor, ticker: str
     return [tarefa_tecnica, tarefa_sentimento, tarefa_deliberacao]
 
 
+def _montar_comite(
+    ticker: str,
+    api_key: Optional[str] = None,
+    modelo: str = "gemini/gemini-1.5-flash"
+) -> Tuple[Crew, str]:
+    """Instancia o LLM, agentes, tarefas e Crew para o ticker informado."""
+    ticker_padronizado = ticker.strip().upper()
+    llm = inicializar_modelo_llm(nome_modelo=modelo, api_key=api_key)
+
+    # 1. Instanciar Agentes
+    agente_tecnico, agente_sentimento, agente_diretor = criar_comite_investimento(llm)
+
+    # 2. Criar Tarefas
+    tarefas = criar_tarefas(agente_tecnico, agente_sentimento, agente_diretor, ticker_padronizado)
+
+    # 3. Criar Equipe (Crew) com Processamento Sequencial
+    equipe = Crew(
+        agents=[agente_tecnico, agente_sentimento, agente_diretor],
+        tasks=tarefas,
+        process=Process.sequential,
+        verbose=True
+    )
+    return equipe, ticker_padronizado
+
+
+async def executar_comite_analise_async(
+    ticker: str,
+    api_key: Optional[str] = None,
+    modelo: str = "gemini/gemini-1.5-flash"
+) -> str:
+    """Executa o pipeline multiagente de forma assíncrona (ideal para Google Colab / Jupyter).
+    
+    Args:
+        ticker: Código da ação (ex: 'PETR4', 'VALE3', 'ITUB4').
+        api_key: Chave do Google Gemini (opcional se estiver no .env).
+        modelo: Nome do modelo do Gemini no formato CrewAI/LiteLLM.
+        
+    Returns:
+        Texto em Markdown contendo a deliberação final do comitê.
+    """
+    equipe, ticker_padronizado = _montar_comite(ticker=ticker, api_key=api_key, modelo=modelo)
+    resultado = await equipe.kickoff_async(inputs={"ticker": ticker_padronizado})
+    return str(resultado)
+
+
 def executar_comite_analise(ticker: str, api_key: Optional[str] = None, modelo: str = "gemini/gemini-1.5-flash") -> str:
     """Executa o pipeline multiagente completo para o ticker informado.
+    
+    Compatível tanto com execução via terminal (CLI) quanto com ambientes
+    que já possuem um event loop ativo (como Google Colab / Jupyter).
     
     Args:
         ticker: Código da ação (ex: 'PETR4', 'VALE3', 'ITUB4').
@@ -106,23 +156,22 @@ def executar_comite_analise(ticker: str, api_key: Optional[str] = None, modelo: 
     Returns:
         Texto em Markdown contendo a deliberação final do comitê.
     """
-    ticker_padronizado = ticker.strip().upper()
-    llm = inicializar_modelo_llm(nome_modelo=modelo, api_key=api_key)
-    
-    # 1. Instanciar Agentes
-    agente_tecnico, agente_sentimento, agente_diretor = criar_comite_investimento(llm)
-    
-    # 2. Criar Tarefas
-    tarefas = criar_tarefas(agente_tecnico, agente_sentimento, agente_diretor, ticker_padronizado)
-    
-    # 3. Criar Equipe (Crew) com Processamento Sequencial
-    equipe = Crew(
-        agents=[agente_tecnico, agente_sentimento, agente_diretor],
-        tasks=tarefas,
-        process=Process.sequential,
-        verbose=True
-    )
-    
-    # 4. Executar e Coletar Resultado
-    resultado = equipe.kickoff(inputs={"ticker": ticker_padronizado})
+    equipe, ticker_padronizado = _montar_comite(ticker=ticker, api_key=api_key, modelo=modelo)
+
+    # Detecta se há um event loop ativo (ex.: Google Colab / Jupyter)
+    try:
+        asyncio.get_running_loop()
+        loop_ativo = True
+    except RuntimeError:
+        loop_ativo = False
+
+    if loop_ativo:
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            resultado = executor.submit(
+                equipe.kickoff,
+                inputs={"ticker": ticker_padronizado}
+            ).result()
+    else:
+        resultado = equipe.kickoff(inputs={"ticker": ticker_padronizado})
+
     return str(resultado)
