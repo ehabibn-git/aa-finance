@@ -3,16 +3,14 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ehabibn-git/aa-finance/blob/main/notebooks/aa_finance_tcc.ipynb)
 
 #### Aluno: [Elias Habib](https://github.com/ehabibn-git)
-#### Orientadora: [Nome da Orientadora](https://github.com/link_do_github) <!-- ou Prof. Manoela Kohler -->
-#### Co-orientador(/a/es/as): [Nome Sobrenome](https://github.com/link_do_github) <!-- caso não aplicável, remover esta linha -->
-
+#### Orientadora: Prof. Leonardo Mendonza
+#### Co-orientador(/a/es/as): N/A
 ---
 
-Trabalho apresentado ao curso [GenAI e LLM MASTER](https://ica.ele.puc-rio.br/cursos/ia-generativa-large-language-models/) como pré-requisito para conclusão de curso e obtenção de crédito na disciplina "Projetos de Sistemas Inteligentes de Apoio à Decisão".
+Trabalho apresentado ao curso [GenAI e LLM MASTER](https://ica.ele.puc-rio.br/cursos/ia-generativa-large-language-models/) como pré-requisito para conclusão de curso e obtenção de diploma.
 
 - [Link para o código](https://github.com/ehabibn-git/aa-finance).
 - [Link para o Google Colab](https://colab.research.google.com/github/ehabibn-git/aa-finance/blob/main/notebooks/aa_finance_tcc.ipynb).
-- [Link para a monografia](https://link_da_monografia.com). <!-- caso aplicável -->
 
 ---
 
