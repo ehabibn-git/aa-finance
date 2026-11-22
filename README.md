@@ -4,7 +4,7 @@
 
 #### Aluno: [Elias Habib](https://github.com/ehabibn-git)
 #### Orientadora: Prof. Leonardo Mendonza
-#### Co-orientador(/a/es/as): N/A
+#### Co-orientador(a): N/A
 ---
 
 Trabalho apresentado ao curso [GenAI e LLM MASTER](https://ica.ele.puc-rio.br/cursos/ia-generativa-large-language-models/) como pré-requisito para conclusão de curso e obtenção de diploma.
