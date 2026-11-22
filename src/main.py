@@ -10,7 +10,13 @@ import os
 import sys
 import argparse
 from datetime import datetime
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Garantir que a pasta raiz do projeto esteja no sys.path ao executar via 'python src/main.py'
+RAIZ_PROJETO = str(Path(__file__).resolve().parent.parent)
+if RAIZ_PROJETO not in sys.path:
+    sys.path.insert(0, RAIZ_PROJETO)
 
 # Carregar variáveis do arquivo .env (caso exista)
 load_dotenv()
