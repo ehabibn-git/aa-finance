@@ -84,7 +84,7 @@ flowchart TD
 - **Objetivo:** Superar a barreira de corte temporal (*cutoff date*) das LLMs, fornecendo ao agente de sentimento fatos recentes sobre governança, balanços e riscos regulatórios.
 
 #### 2.3 Agentes Especialistas e Orquestração Multiagente (`src/agents/`)
-A orquestração é estruturada através do framework **CrewAI**, conectada ao modelo **Google Gemini** (`gemini-1.5-flash`), com temperatura controlada ($T=0.2$) para evitar respostas alucinatórias:
+A orquestração é estruturada através do framework **CrewAI**, conectada ao modelo **Google Gemini** (`gemini-3.5-flash-lite`, com suporte opcional a `gemini-3.8-flash`), com temperatura controlada ($T=0.2$) para evitar respostas alucinatórias:
 
 1. **Analista Técnico Quantitativo (`criar_agente_tecnico`):**
    - **Papel:** Interpretação fria e analítica dos dados matemáticos providos pela `financial_tool`.
@@ -140,7 +140,7 @@ Durante os experimentos, identificaram-se limitações intrínsecas ao desenho a
 #### 4.3 Propostas para Trabalhos Futuros
 Para a continuidade da pesquisa e evolução da plataforma, recomendam-se:
 1. **Agente Fundamentalista (CVM):** Criação de um quarto agente conectado à API de dados abertos da Comissão de Valores Mobiliários (CVM) para analisar múltiplos fundamentalistas históricos (P/L, P/VP, EV/EBITDA, ROIC e Dívida Líquida);
-2. **Análise Gráfica Multimodal:** Utilização de modelos multimodais de visão computacional (ex.: Gemini 1.5 Pro) para inspeção direta de imagens de gráficos de velas (*candlesticks*), identificando figuras gráficas e padrões visuais de reversão;
+2. **Análise Gráfica Multimodal:** Utilização de modelos multimodais de visão computacional (ex.: Gemini 3.8 Flash) para inspeção direta de imagens de gráficos de velas (*candlesticks*), identificando figuras gráficas e padrões visuais de reversão;
 3. **Framework de Backtesting:** Desenvolvimento de um simulador histórico para mensurar o alfa, o *drawdown* máximo e o Índice de Sharpe de uma carteira hipotética rebalanceada periodicamente pelas recomendações do sistema.
 
 ---
@@ -197,7 +197,7 @@ pip install -r requirements.txt
 1. Clique no botão **Open in Colab** no topo deste documento ou acesse diretamente: [aa_finance_tcc.ipynb](https://colab.research.google.com/github/ehabibn-git/aa-finance/blob/main/notebooks/aa_finance_tcc.ipynb).
 2. Adicione sua chave gratuita do Google AI Studio nos **Secrets** (ícone de chave 🔑 no menu lateral do Colab) com o nome `GEMINI_API_KEY` e habilite o acesso ao notebook.
 3. Execute a **Etapa 1** para clonar o repositório e instalar as dependências automaticamente (`requirements.txt`).
-4. Na **Etapa 3**, utilize o formulário interativo para escolher a ação da B3 desejada (ex: `PETR4`, `VALE3`, `ITUB4`) e o modelo (`gemini-1.5-flash`).
+4. Na **Etapa 3**, utilize o formulário interativo para escolher a ação da B3 desejada (ex: `PETR4`, `VALE3`, `ITUB4`) e o modelo (`gemini/gemini-3.5-flash-lite` ou `gemini/gemini-3.8-flash`).
 5. Acompanhe a pré-visualização das ferramentas matemáticas determinísticas e a deliberação dos agentes inteligentes em tempo real.
 
 #### 7.2 Execução Local

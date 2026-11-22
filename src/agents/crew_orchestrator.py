@@ -19,15 +19,18 @@ from crewai import Task, Crew, Process, LLM
 from src.agents.finance_agents import criar_comite_investimento
 
 
+MODELO_PADRAO = "gemini/gemini-3.5-flash-lite"
+
+
 def inicializar_modelo_llm(
-    nome_modelo: str = "gemini/gemini-1.5-flash",
+    nome_modelo: str = MODELO_PADRAO,
     temperatura: float = 0.2,
     api_key: Optional[str] = None
 ) -> LLM:
     """Inicializa o modelo de linguagem no CrewAI.
     
-    Por padrão utiliza o Google Gemini (gemini-1.5-flash) que alia
-    alta velocidade, grande janela de contexto e custo acessível.
+    Por padrão utiliza o Google Gemini (gemini-3.5-flash-lite) que alia
+    alta velocidade, grande janela de contexto e disponibilidade no Free Tier.
     """
     chave = api_key or os.getenv("GEMINI_API_KEY")
     if not chave:
@@ -100,7 +103,7 @@ def criar_tarefas(agente_tecnico, agente_sentimento, agente_diretor, ticker: str
 def _montar_comite(
     ticker: str,
     api_key: Optional[str] = None,
-    modelo: str = "gemini/gemini-1.5-flash"
+    modelo: str = MODELO_PADRAO
 ) -> Tuple[Crew, str]:
     """Instancia o LLM, agentes, tarefas e Crew para o ticker informado."""
     ticker_padronizado = ticker.strip().upper()
@@ -125,7 +128,7 @@ def _montar_comite(
 async def executar_comite_analise_async(
     ticker: str,
     api_key: Optional[str] = None,
-    modelo: str = "gemini/gemini-1.5-flash"
+    modelo: str = MODELO_PADRAO
 ) -> str:
     """Executa o pipeline multiagente de forma assíncrona (ideal para Google Colab / Jupyter).
     
@@ -142,7 +145,7 @@ async def executar_comite_analise_async(
     return str(resultado)
 
 
-def executar_comite_analise(ticker: str, api_key: Optional[str] = None, modelo: str = "gemini/gemini-1.5-flash") -> str:
+def executar_comite_analise(ticker: str, api_key: Optional[str] = None, modelo: str = MODELO_PADRAO) -> str:
     """Executa o pipeline multiagente completo para o ticker informado.
     
     Compatível tanto com execução via terminal (CLI) quanto com ambientes
@@ -151,7 +154,7 @@ def executar_comite_analise(ticker: str, api_key: Optional[str] = None, modelo: 
     Args:
         ticker: Código da ação (ex: 'PETR4', 'VALE3', 'ITUB4').
         api_key: Chave do Google Gemini (opcional se estiver no .env).
-        modelo: Nome do modelo do Gemini no formato litellm (padrão: 'gemini/gemini-1.5-flash').
+        modelo: Nome do modelo do Gemini no formato CrewAI (padrão: 'gemini/gemini-3.5-flash-lite').
         
     Returns:
         Texto em Markdown contendo a deliberação final do comitê.

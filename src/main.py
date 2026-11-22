@@ -3,7 +3,7 @@
 Permite executar o sistema multiagente diretamente via linha de comando:
 Exemplo:
     python src/main.py --ticker PETR4
-    python src/main.py --ticker VALE3 --modelo gemini/gemini-1.5-pro
+    python src/main.py --ticker VALE3 --modelo gemini/gemini-3.8-flash
 """
 
 import os
@@ -31,8 +31,8 @@ def main():
     parser.add_argument(
         "--modelo",
         type=str,
-        default="gemini/gemini-1.5-flash",
-        help="Modelo LLM a utilizar via CrewAI (padrão: gemini/gemini-1.5-flash)"
+        default="gemini/gemini-3.5-flash-lite",
+        help="Modelo LLM a utilizar via CrewAI (padrão: gemini/gemini-3.5-flash-lite)"
     )
     
     args = parser.parse_args()

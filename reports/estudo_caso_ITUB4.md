@@ -1,7 +1,7 @@
 # Estudo de Caso de Apoio à Decisão: ITUB4 (Itaú Unibanco PN)
 
 **Data da Análise:** Outubro de 2026  
-**Ambiente de Execução:** Sistema Multiagente CrewAI com Google Gemini 1.5 Flash  
+**Ambiente de Execução:** Sistema Multiagente CrewAI com Google Gemini (`gemini-3.5-flash-lite`)  
 **Trabalho:** AA-FINANCE (TCC GenAI e LLM Master - PUC-Rio)  
 
 ---
